@@ -1,0 +1,123 @@
+---
+title: "Course Project pt2"
+author: "Zach Dungan"
+date: "3/3/2022"
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part 2: Inferential Data Analysis
+
+Load libraries and ToothGrowth data
+
+``` {r}
+library(ggplot2)
+library(datasets)
+
+data("ToothGrowth")
+```
+
+**View info about ToothGrowth data**
+
+``` {r}
+str(ToothGrowth)
+```
+
+``` {r}
+head(ToothGrowth)
+```
+
+Summary statistics
+``` {r}
+summary(ToothGrowth)
+```
+Correct 'dose' varibale
+``` {r}
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+```
+
+**Data Analysis**
+
+``` {r}
+supp_mean <- split(ToothGrowth$len, ToothGrowth$supp)
+sapply(supp_mean, mean)
+
+supp_dose <- split(ToothGrowth$len, ToothGrowth$dose)
+sapply(supp_dose, mean)
+```
+
+Graph of effect of supplement on tooth length:
+``` {r}
+ggplot(aes(x=supp, y=len), data=ToothGrowth) + geom_boxplot(aes(fill=supp)) + xlab("Supplement") + ylab("Length")
+```
+
+Graph of effect of supplement on tooth length:
+``` {r}
+ggplot(aes(x=dose, y=len), data=ToothGrowth) + geom_boxplot(aes(fill=dose)) + xlab("Dose") + ylab("Length")
+```
+
+**Statistical Tests**
+
+Create easy to use variables
+``` {r}
+supp <- ToothGrowth$supp
+dose <- ToothGrowth$dose
+len <- ToothGrowth$len
+```
+
+
+T-Test #1
+
+``` {r}
+# Check for differences in supplement type
+t.test(len[supp == "VC"], len[supp == "OJ"])
+```
+
+The p-value is about 0.06, meaning we cannot reject the null hypothesis that different supplements don't have an effect on tooth length.
+
+T-Test #2
+``` {r}
+# Check for differences in dosage type
+# In this test, use 0.5 and 1.0
+t.test(len[dose == 0.5], len[dose == 1.0])
+```
+
+The p-value is very close to zero, which shows a considerable impact on tooth length, meaning we can reject the null hypothesis. 
+
+For thoroughness, the tests between [0.5 and 2.0] and [1.0 and 2.0] are below, with similar results
+
+``` {r}
+# 0.5 and 2.0
+t.test(len[dose == 0.5], len[dose == 2.0])
+
+# 1.0 and 2.0
+t.test(len[dose == 1.0], len[dose == 2.0])
+```
+
+**Conclusions**
+
+1. The supplement type, statistically speaking, has no significant effect on tooth length.
+2. The dosage amount has a significant effect on tooth length
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
